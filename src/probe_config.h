@@ -70,6 +70,8 @@ do { \
 
 #elif defined(XIAO_PINOUT)
 #include "board_xiao_config.h"
+#elif defined(ZERO_PINOUT)
+#include "board_zero_config.h"
 
 #else
 #include "board_debug_probe_config.h"

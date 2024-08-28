@@ -10,4 +10,13 @@ build() {
     cd ..
 }
 
+build build-probe ''
 build build-xiao -DXIAO=1
+build build-zero -DZERO=1
+
+rm -rf uf2
+mkdir uf2
+
+cp build-xiao/*.uf2 uf2
+cp build-zero/*.uf2 uf2
+cp build-probe/*.uf2 uf2

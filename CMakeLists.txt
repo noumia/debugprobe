@@ -76,6 +76,14 @@ if (XIAO)
     )
 endif ()
 
+if (ZERO)
+    pico_enable_stdio_uart(debugprobe 0)
+    target_compile_definitions(debugprobe PRIVATE ZERO_PINOUT=1 NO_STDIO_UART=1)
+    set_target_properties(debugprobe PROPERTIES 
+        OUTPUT_NAME "debugprobe_zero"
+    )
+endif ()
+
 pico_set_binary_type(debugprobe copy_to_ram)
 
 pico_add_extra_outputs(debugprobe)
