@@ -6,6 +6,10 @@
 #define PROBE_IO_RAW
 #define PROBE_CDC_UART
 
+#if defined(XIAO_NOUART)
+#undef PROBE_CDC_UART
+#endif
+
 /* XIAO
 
 A0 26 | 5V
@@ -27,11 +31,13 @@ TX  0 | 1 RX
 // Target reset config
 #define PROBE_PIN_RESET 2
 
+#if defined(PROBE_CDC_UART)
 // UART config
 #define PROBE_UART_TX 0
 #define PROBE_UART_RX 1
 #define PROBE_UART_INTERFACE uart0
 #define PROBE_UART_BAUDRATE 115200
+#endif
 
 // LED config
 #define PROBE_USB_CONNECTED_LED 25

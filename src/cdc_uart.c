@@ -31,6 +31,8 @@
 
 #include "probe_config.h"
 
+#if defined(PROBE_CDC_UART)
+
 TaskHandle_t uart_taskhandle;
 TickType_t last_wake, interval = 100;
 volatile TickType_t break_expiry;
@@ -301,3 +303,5 @@ void tud_cdc_send_break_cb(uint8_t itf, uint16_t wValue) {
     break;
   }
 }
+
+#endif

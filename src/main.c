@@ -36,7 +36,11 @@
 
 #include "probe_config.h"
 #include "probe.h"
+
+#if defined(PROBE_CDC_UART)
 #include "cdc_uart.h"
+#endif
+
 #include "get_serial.h"
 #include "led.h"
 #include "tusb_edpt_handler.h"
@@ -85,7 +89,9 @@ int main(void) {
 
     board_init();
     usb_serial_init();
+#if defined(PROBE_CDC_UART)
     cdc_uart_init();
+#endif
     tusb_init();
 
 #ifndef NO_STDIO_UART
@@ -100,7 +106,9 @@ int main(void) {
 
     if (THREADED) {
         /* UART needs to preempt USB as if we don't, characters get lost */
+#if defined(PROBE_CDC_UART)
         xTaskCreate(cdc_thread, "UART", configMINIMAL_STACK_SIZE, NULL, UART_TASK_PRIO, &uart_taskhandle);
+#endif
         xTaskCreate(usb_thread, "TUD", configMINIMAL_STACK_SIZE, NULL, TUD_TASK_PRIO, &tud_taskhandle);
         /* Lowest priority thread is debug - need to shuffle buffers before we can toggle swd... */
         xTaskCreate(dap_thread, "DAP", configMINIMAL_STACK_SIZE, NULL, DAP_TASK_PRIO, &dap_taskhandle);
@@ -109,7 +117,9 @@ int main(void) {
 
     while (!THREADED) {
         tud_task();
+#if defined(PROBE_CDC_UART)
         cdc_task();
+#endif
 
 #if (PROBE_DEBUG_PROTOCOL == PROTO_DAP_V2)
         if (tud_vendor_available()) {

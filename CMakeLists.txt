@@ -70,7 +70,7 @@ target_link_libraries(debugprobe PRIVATE
 
 if (XIAO)
     pico_enable_stdio_uart(debugprobe 0)
-    target_compile_definitions(debugprobe PRIVATE XIAO_PINOUT=1 NO_STDIO_UART=1)
+    target_compile_definitions(debugprobe PRIVATE XIAO_PINOUT=1 NO_STDIO_UART=1 XIAO_NOUART=1)
     set_target_properties(debugprobe PROPERTIES 
         OUTPUT_NAME "debugprobe_xiao"
     )
@@ -78,7 +78,7 @@ endif ()
 
 if (ZERO)
     pico_enable_stdio_uart(debugprobe 0)
-    target_compile_definitions(debugprobe PRIVATE ZERO_PINOUT=1 NO_STDIO_UART=1)
+    target_compile_definitions(debugprobe PRIVATE ZERO_PINOUT=1 NO_STDIO_UART=1 ZERO_NOUART=1)
     set_target_properties(debugprobe PROPERTIES 
         OUTPUT_NAME "debugprobe_zero"
     )
