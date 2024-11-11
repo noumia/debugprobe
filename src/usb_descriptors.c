@@ -69,8 +69,10 @@ uint8_t const * tud_descriptor_device_cb(void)
 enum
 {
   ITF_NUM_PROBE, // Old versions of Keil MDK only look at interface 0
+#if defined(PROBE_CDC_UART)
   ITF_NUM_CDC_COM,
   ITF_NUM_CDC_DATA,
+#endif
   ITF_NUM_TOTAL
 };
 
@@ -80,10 +82,18 @@ enum
 #define DAP_OUT_EP_NUM 0x04
 #define DAP_IN_EP_NUM 0x85
 
+#if defined(PROBE_CDC_UART)
 #if (PROBE_DEBUG_PROTOCOL == PROTO_DAP_V1)
 #define CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + TUD_HID_INOUT_DESC_LEN)
 #else
 #define CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + TUD_VENDOR_DESC_LEN)
+#endif
+#else
+#if (PROBE_DEBUG_PROTOCOL == PROTO_DAP_V1)
+#define CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_HID_INOUT_DESC_LEN)
+#else
+#define CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_VENDOR_DESC_LEN)
+#endif
 #endif
 
 static uint8_t const desc_hid_report[] =
@@ -111,8 +121,10 @@ uint8_t desc_configuration[] =
   // Bulk
   TUD_VENDOR_DESCRIPTOR(ITF_NUM_PROBE, 0, DAP_OUT_EP_NUM, DAP_IN_EP_NUM, 64),
 #endif
+#if defined(PROBE_CDC_UART)
   // Interface 1 + 2
   TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_COM, 6, CDC_NOTIFICATION_EP_NUM, 64, CDC_DATA_OUT_EP_NUM, CDC_DATA_IN_EP_NUM, 64),
+#endif
 };
 
 // Invoked when received GET CONFIGURATION DESCRIPTOR
@@ -121,8 +133,10 @@ uint8_t desc_configuration[] =
 uint8_t const * tud_descriptor_configuration_cb(uint8_t index)
 {
   (void) index; // for multiple configurations
+#if defined(PROBE_CDC_UART)
   /* Hack in CAP_BREAK support */
   desc_configuration[CONFIG_TOTAL_LEN - TUD_CDC_DESC_LEN + 8 + 9 + 5 + 5 + 4 - 1] = 0x6;
+#endif
   return desc_configuration;
 }
 
